@@ -39,7 +39,11 @@ class Core {
         
         let fm = FileManager.default
         var home = fm.homeDirectoryForCurrentUser
+        #if os(macOS)
         home.append(path: defaultConfig.homeFolderName)
+        #else
+        home = home.appendingPathComponent(defaultConfig.homeFolderName, isDirectory: true)
+        #endif
         
         for didFail in 0...1 {
             do {
