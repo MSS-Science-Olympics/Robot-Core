@@ -6,8 +6,6 @@
 //
 
 import ArgumentParser
-import System
-
 
 /// Command interceptor allowing core soft initialization before command handling
 protocol ArpyCommand : AsyncParsableCommand {

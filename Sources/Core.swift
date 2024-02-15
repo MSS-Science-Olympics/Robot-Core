@@ -5,7 +5,6 @@
 //  Created by 0x41c on 2024-02-11.
 //
 
-import System
 import Logging
 import Foundation
 
@@ -40,7 +39,7 @@ class Core {
         
         let fm = FileManager.default
         let userHome = fm.homeDirectoryForCurrentUser
-        let arpyHome = userHome.appending(path: defaultConfig.homeFolderName.string)
+        let arpyHome = userHome.appending(path: defaultConfig.homeFolderName)
         let homeString = arpyHome.absoluteString
         
         var homeDirectoryExists: ObjCBool = false
