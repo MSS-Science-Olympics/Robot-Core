@@ -38,37 +38,32 @@ class Core {
         logger.debug("Initializing Core")
         
         let fm = FileManager.default
-        let userHome = fm.homeDirectoryForCurrentUser
-        let arpyHome = userHome.appending(path: defaultConfig.homeFolderName)
-        let homeString = arpyHome.absoluteString
+        var home = fm.homeDirectoryForCurrentUser
+        home.append(path: defaultConfig.homeFolderName)
         
-        var homeDirectoryExists: ObjCBool = false
-        let homeTaken = fm.fileExists(atPath: homeString, isDirectory: &homeDirectoryExists)
-        
-        guard !(homeTaken && !homeDirectoryExists.boolValue) else {
-            throw Core.InitializationError.homeDirConflict
+        for didFail in 0...1 {
+            do {
+                // Attempting to determine if the directory exists outside of this function doesn't work – likely because
+                // of the nature of the final path component. (It treats it as a file because of the "."). Therefore,
+                // to circumvent this, we use the error thrown from here as an indicator.
+                try fm.createDirectory(at: home, withIntermediateDirectories: false)
+                logger.debug("Created home directory")
+                // If we're here, there's no need to try again.
+                break
+            } catch {
+                #if DEBUG
+                let rp = (command as? Arpy)
+                if rp != nil && rp!.cleanHomeDir {
+                    logger.debug("Removing existing home directory")
+                    try fm.removeItem(at: home)
+                }
+                
+                #else
+                guard didFail != 1 else { throw error }
+                break // It exists so we can get out of the loop
+                #endif
+            }
         }
-        
-        var exists = homeDirectoryExists.boolValue
-        
-        logger.debug("\(homeString): \(homeTaken),\(homeDirectoryExists.boolValue)")
-        
-        #if DEBUG
-        let rp = (command as? Arpy)
-        if rp != nil && exists && rp!.cleanHomeDir {
-            logger.debug("Removing existing home directory")
-            try fm.removeItem(at: arpyHome)
-        }
-        exists = false
-        #endif
-        
-        if !exists {
-            logger.debug("Creating home directory")
-            // Creating a directory using the homeString results in it forcing the file scheme
-            try fm.createDirectory(at: arpyHome, withIntermediateDirectories: false)
-        }
-        
-        
     }
     
 }

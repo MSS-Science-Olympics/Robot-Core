@@ -22,6 +22,7 @@ protocol LogFormatter {
     )
     
     static func processLog(data: LogData) -> String
+    static var dateFormatter: DateFormatter { get }
 }
 
 enum LogComponent {
@@ -60,7 +61,12 @@ extension Logger.Level {
 }
 
 extension LogFormatter {
-
+    static var dateFormatter: DateFormatter {
+        var format = DateFormatter()
+        format.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+        return format
+    }
+    
     static func processComponent(_ componentType: LogComponent, data: LogData) -> String {
         switch componentType {
         case .level:
@@ -82,7 +88,7 @@ extension LogFormatter {
         case .line:
             "\(data.line)"
         case .timestamp:
-            data.time.formatted(.iso8601)
+            dateFormatter.string(from: data.time)
         case .string(let value):
             value
         case .group(let components):
