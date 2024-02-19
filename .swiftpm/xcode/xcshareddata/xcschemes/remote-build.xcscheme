@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "arpy"
-               BuildableName = "arpy"
-               BlueprintName = "arpy"
+               BlueprintIdentifier = "remote-build"
+               BuildableName = "remote-build"
+               BlueprintName = "remote-build"
                ReferencedContainer = "container:">
             </BuildableReference>
          </BuildActionEntry>
@@ -35,6 +35,7 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
+      customWorkingDirectory = "$(SRCROOT)"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
@@ -43,12 +44,18 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "arpy"
-            BuildableName = "arpy"
-            BlueprintName = "arpy"
+            BlueprintIdentifier = "remote-build"
+            BuildableName = "remote-build"
+            BlueprintName = "remote-build"
             ReferencedContainer = "container:">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "--debug"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -60,9 +67,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "arpy"
-            BuildableName = "arpy"
-            BlueprintName = "arpy"
+            BlueprintIdentifier = "remote-build"
+            BuildableName = "remote-build"
+            BlueprintName = "remote-build"
             ReferencedContainer = "container:">
          </BuildableReference>
       </BuildableProductRunnable>

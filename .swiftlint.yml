@@ -1,0 +1,8 @@
+disabled_rules:
+  - large_tuple
+opt_in_rules:
+  - indentation_width
+
+# strict: true
+indentation_width:
+  indentation_width: 2
