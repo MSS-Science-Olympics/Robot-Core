@@ -2,9 +2,13 @@
 
 import PackageDescription
 
+#if os(macOS)
 let globalPlugins: [Target.PluginUsage] = [
   .plugin(name: "SwiftLintPlugin", package: "SwiftLint")
 ]
+#else
+let globalPlugins = [Target.PluginUsage]()
+#endif
 
 let globalDependancies: [Target.Dependency] = [
   .product(name: "ArgumentParser", package: "swift-argument-parser"),
