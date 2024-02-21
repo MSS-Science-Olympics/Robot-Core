@@ -18,27 +18,24 @@ public struct SSHInterface: RemoteCommandProvider {
   }
 
   /// Executes a remote command through ssh.
+  ///
+  ///
+  /// - Note: Equivilent to ```ssh <username>@<hostname> -p <port> <command> ...<arguments>```
+  @discardableResult
   public func remote(
     command: String,
     arguments: [String],
     livePrint: Bool = false
-  ) async throws -> CommandOutput {
+  ) throws -> CommandOutput {
     let sshArguments = [
       "\(username)@\(hostname)", "-p", "\(port)", command
     ] + arguments
 
-    var out = [String]()
-    var error = [String]()
-
-    try exec(sshArguments) { outLine in
-      if livePrint { print(outLine) }
-      out.append(outLine)
-    } didError: { errorLine in
-      if livePrint { print(errorLine) }
-      error.append(errorLine)
+    let cond: (String) -> () = { line in
+      if livePrint { print(line) }
     }
 
-    return (out, error)
+    return try exec(sshArguments, didOutput: cond, didError: cond)
   }
 }
 

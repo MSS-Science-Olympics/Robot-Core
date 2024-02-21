@@ -24,24 +24,28 @@ extension CommandInterface {
       fatalError("Failed to parse command output.")
     }
     guard !line.isEmpty else { return nil }
-    return line
+    return line.replacingOccurrences(of: "\n", with: "")
   }
 
   internal func exec(
     _ arguments: [String],
     didOutput: @escaping (String) -> Void,
     didError: @escaping (String) -> Void
-  ) throws {
+  ) throws -> CommandOutput {
     let process = Process()
     let stdout = Pipe()
     let stderr = Pipe()
+    var outLines = [String]()
+    var errLines = [String]()
 
     stdout.fileHandleForReading.readabilityHandler = { handle in
       guard let parsed = parseOutput(handle) else { return }
+      outLines.append(parsed)
       didOutput(parsed)
     }
     stderr.fileHandleForReading.readabilityHandler = { handle in
       guard let parsed = parseOutput(handle) else { return }
+      errLines.append(parsed)
       didError(parsed)
     }
 
@@ -54,6 +58,8 @@ extension CommandInterface {
 
     stdout.fileHandleForReading.readabilityHandler = nil
     stderr.fileHandleForReading.readabilityHandler = nil
+
+    return (outLines, errLines)
   }
 }
 
