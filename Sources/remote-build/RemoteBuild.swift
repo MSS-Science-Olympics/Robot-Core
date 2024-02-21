@@ -65,7 +65,8 @@ struct RemoteBuild: AsyncParsableCommand {
         "build",
         "--package-path", "\(DefaultConfiguration.remoteProjectFilePath)",
         "--target", "ArpyCore" // TODO: Configurable targets
-      ]
+      ],
+      livePrint: debug
     )
     guard buildResult.error.count == 0 else {
       throw RemoteBuildError.buildFail
