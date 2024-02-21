@@ -1,5 +1,5 @@
 //
-//  URL+filePath.swift
+//  URL+pathUtilities.swift
 //
 //
 //  Created by 0x41c on 2024-02-19.

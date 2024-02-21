@@ -31,18 +31,10 @@ public struct SSHInterface: RemoteCommandProvider {
       "\(username)@\(hostname)", "-p", "\(port)", command
     ] + arguments
 
-    let cond: (String) -> () = { line in
+    let cond: (String) -> Void = { line in
       if livePrint { print(line) }
     }
 
     return try exec(sshArguments, didOutput: cond, didError: cond)
-  }
-}
-
-extension SSHInterface {
-  /// An incomplete list of errors thrown by the ssh cli output
-  enum SSHError: Error {
-    case hostnameNotFound
-    case noSustainedConnectionSupported
   }
 }

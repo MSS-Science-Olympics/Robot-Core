@@ -32,8 +32,8 @@ struct RemoteBuild: AsyncParsableCommand {
     logger.logLevel = debug ? .debug : .info
     let data = DefaultConfiguration.sshData
     let ssh = SSHInterface(username: data.username, hostName: data.hostname)
-    // Foolproof
-    let ack = try ssh.remote(command: "echo", arguments: ["ack"], livePrint: debug)
+    let rsync = RSyncInterface(username: data.username, hostname: data.hostname)
+    let ack = try ssh.remote(command: "echo", arguments: ["Connection Established"], livePrint: debug)
     guard ack.error.isEmpty else {
       logger.error("Unable to establish connection with Raspberry Pi:")
       for line in ack.error {
@@ -41,9 +41,6 @@ struct RemoteBuild: AsyncParsableCommand {
       }
       throw RemoteBuildError.unableToConnect
     }
-    let excludedIdentifiers = [".git", ".swiftpm", ".build", "Package.resolved"]
-    let rsync = RSyncInterface(username: data.username, hostname: data.hostname)
-
     // Remove source path components: Sources/target/file
     let projectDir = URL(filePath: #filePath).deletingLastPathComponents(3)
     let remoteProjectDir = URL(filePath: DefaultConfiguration.remoteProjectFilePath)
@@ -51,7 +48,7 @@ struct RemoteBuild: AsyncParsableCommand {
     let syncResults = try rsync.sync(
       localBaseDir: projectDir,
       remoteBaseDir: remoteProjectDir,
-      excluding: excludedIdentifiers,
+      excluding: DefaultConfiguration.excludedSyncPatterns,
       livePrint: debug
     )
     guard syncResults.error.count == 0 else {
@@ -82,4 +79,5 @@ struct DefaultConfiguration {
   static let sshData = (hostname: "rp.local", username: "rp")
   static let logging = (identifier: "ca.bc.sd57.student.arpy.remote-build", level: Logger.Level.debug)
   static let remoteProjectFilePath = "/home/rp/core/"
+  static let excludedSyncPatterns = [".git", ".swiftpm", ".build", ".cache", "Package.resolved"]
 }
